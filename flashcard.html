@@ -1,0 +1,201 @@
+<html> 
+
+    <head> 
+        <title>Flashcard Poop</title> 
+        <style type="text/css"> 
+            body {
+              overflow: hidden;
+            }
+            .face {
+                height: 200px;
+                width: 320px;
+                position: absolute;
+                top: 0px;
+                left: 0px;
+                -webkit-transition-property: all;
+                -webkit-transition-duration: 1s;
+                -webkit-transition-timing-function: ease-out;
+                -webkit-backface-visibility: hidden;
+            }
+            
+            #card1 .front {
+                background-color: red;
+            }
+            
+            #card1 .back {
+                background-color: #007fff;
+            }
+            
+            #card2 .front {
+                background-color: green;
+            }
+            
+            #card2 .back {
+                background-color: gray;
+            }
+            
+            .back {
+                -webkit-transform: rotateY(180deg);
+            }
+            
+            #card1, #card2 {
+                position: absolute;
+                -webkit-transition: left 1s ease-in;
+            }
+            @-webkit-keyframes slideRightHide {
+                from {left:
+                    0%;
+            }
+                to {left:
+                    100%;
+            }
+            }
+            @-webkit-keyframes slideRightShow {
+                from {
+                  left:
+                    -100%;
+            }
+                to {
+                  left:
+                    0%;
+            }
+            }
+            
+            .slideRightShow {
+                -webkit-animation-name: slideRightShow;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-timing-function: ease-in-out;
+            }
+            
+            .slideRightHide {
+                -webkit-animation-name: slideRightHide;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-timing-function: ease-in-out;
+            }
+            
+            @-webkit-keyframes slideLeftHide {
+                from {left:
+                    0%;
+            }
+                to {left:
+                    -100%;
+            }
+            }
+            @-webkit-keyframes slideLeftShow {
+                from {
+                  left:
+                    100%;
+            }
+                to {
+                  left:
+                    0%;
+            }
+            }
+            
+            .slideLeftShow {
+                -webkit-animation-name: slideLeftShow;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-timing-function: ease-in-out;
+            }
+            
+            .slideLeftHide {
+                -webkit-animation-name: slideLeftHide;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-timing-function: ease-in-out;
+            }
+            
+            
+        </style> 
+ 
+    <meta id="viewport" name="viewport" content="width=320; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" /> 
+    </head> 
+    <body onclick="slide()"> 
+        <div id="card1"> 
+            <div class="face front"> 
+                Front1
+            </div> 
+            <div class="face back"> 
+                Back1
+            </div> 
+        </div> 
+        <div id="card2"> 
+            <div class="face front"> 
+                Front2
+            </div> 
+            <div class="face back"> 
+                Back2
+            </div> 
+        </div> 
+                <script type="text/javascript"> 
+            var flipstate = 0;
+            
+            function flip(){
+                var current = document.getElementById(slidestate?"card2":"card1")
+                var front = current.getElementsByClassName("front")[0]
+                var back = current.getElementsByClassName("back")[0]
+                if (flipstate = !flipstate) {
+                    front.style.webkitTransform = "rotateX(180deg)";
+                    back.style.webkitTransform = "rotateX(360deg)";
+                }
+                else {
+                    front.style.webkitTransform = "rotateX(0deg)";
+                    back.style.webkitTransform = "rotateX(180deg)";
+                }
+            }
+            
+            var slidestate = 1;
+            
+            function slide(back){
+                slidestate = !slidestate;
+                var current = document.getElementById(slidestate?"card1":"card2")
+                var next = document.getElementById(slidestate?"card2":"card1");
+                //current.style.left = "-100%"
+                //next.style.left  = "0%"
+                next.style.display = ""
+                current.style.display = ""
+                current.className = back?"slideLeftHide":"slideRightHide";
+                next.className = back?"slideLeftShow":"slideRightShow";
+                setTimeout(function(){
+                  current.style.display = "none"
+                }, 1000)
+            }
+                    window.onload = function(){
+              document.body.ontouchstart = function(e){
+                this.startX = e.targetTouches[0].clientX;
+                this.startY = e.targetTouches[0].clientY;
+                  return false
+              }
+              document.body.ontouchmove = function(e){
+                this.deltaX = e.targetTouches[0].clientX - this.startX;
+                this.deltaY = e.targetTouches[0].clientY - this.startY;
+                  return false
+              }
+              document.body.ontouchend = function(e){
+                    var dist = Math.sqrt(Math.pow(this.deltaX,2)+Math.pow(this.deltaY,2));
+               
+                var absX = Math.abs(this.deltaX), absY = Math.abs(this.deltaY);
+              
+                if(dist < 60) return;
+                if(absX > 50 && absY < 50){
+               
+                  //slide forward, backward
+                  if(this.deltaX > 0){
+                    //next
+                    slide()
+                  }else{
+                    //back
+                    slide(true)
+                  }
+                }
+                if(absX < 50 && absY > 50){
+                  //flip card
+                  flip()
+                }
+                      return false
+              }
+                      }
+        </script> 
+
+
+</body> 
+</html> 
